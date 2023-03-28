@@ -11,5 +11,15 @@
       "src": "/(.*)",
       "dest": "/"
     }
+  ],
+  "rewrites": [
+    {
+      "destination": "https://sever-facebook-fake.vercel.app",
+      "headers": {
+        "host": "sever-facebook-fake.vercel.app",
+        "origin": "*",
+        "referer": "*"
+      }
+    }
   ]
 }
