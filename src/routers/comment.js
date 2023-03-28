@@ -1,11 +1,11 @@
+
+const commentController = require('../controllers/commentController');
 const router = require('express').Router()
 
-const CommentController = require('../controllers/CommentController');
 
+router.post('/addComment', commentController.addComment)
 
-router.post('/addComment', CommentController.addComment)
-
-router.get('/getByPost/:idPost', CommentController.getByPost)
-router.get('/getByParent/:idParent', CommentController.getByParent)
+router.get('/getByPost/:idPost', commentController.getByPost)
+router.get('/getByParent/:idParent', commentController.getByParent)
 
 module.exports = router
