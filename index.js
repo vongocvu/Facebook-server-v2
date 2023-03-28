@@ -4,8 +4,8 @@ const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose")
 require("dotenv").config();
 
-const GroupPublic = require("../src/models/GroupPublic")
-const User = require('../src/models/User')
+const GroupPublic = require("./src/models/GroupPublic")
+const User = require('./src/models/User')
 
 
 const http = require('http');
@@ -112,14 +112,14 @@ mongoose.connection.on('disconnected', () => {
       console.log('Đã mất kết nối đến MongoDB');
 });
 
-const authRoute = require("./routers/auth")
-const messageRoute = require("./routers/message")
-const groupPublicRoute = require("./routers/groupPublic")
-const groupPrivateRoute = require("./routers/groupPrivate")
-const postRoute = require("./routers/post")
-const postDetailRoute = require("./routers/postDetail")
-const commentRoute = require("./routers/comment")
-const groupRoute = require("./routers/group")
+const authRoute = require("./src/routers/auth")
+const messageRoute = require("./src/routers/message")
+const groupPublicRoute = require("./src/routers/groupPublic")
+const groupPrivateRoute = require("./src/routers/groupPrivate")
+const postRoute = require("./src/routers/post")
+const postDetailRoute = require("./src/routers/postDetail")
+const commentRoute = require("./src/routers/comment")
+const groupRoute = require("./src/routers/group")
 
 
 app.use("/v1/auth", authRoute)
