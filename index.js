@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const cookieParser = require("cookie-parser");
 const mongoose = require("mongoose")
+const cors = require('cors');
 require("dotenv").config();
 
 const GroupPublic = require("./src/models/GroupPublic")
@@ -22,6 +23,7 @@ const io = require('socket.io')(server, {
 
 mongoose.set('strictQuery', true);
 
+app.use(cors());
 app.use(function (req, res, next) {
 
       res.setHeader('Access-Control-Allow-Origin', '*');
