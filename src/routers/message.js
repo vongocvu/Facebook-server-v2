@@ -6,7 +6,7 @@ const router = require('express').Router()
 
 router.post('/add', messageController.addMessage)
 
-router.get('/getByGroup/:group', messageController.getMessageByGroup)
+router.get('/getByGroup/:group/:limit', messageController.getMessageByGroup)
 router.post('/sendMessage/:id', messageController.sendMessage)
 
 module.exports = router

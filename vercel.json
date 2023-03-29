@@ -1,25 +1,13 @@
 {
-  "version": 2,
-  "builds": [
-    {
-      "src": "./index.js",
-      "use": "@vercel/node"
-    }
-  ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "/"
+      "dest": "index.js"
     }
   ],
-  "rewrites": [
-    {
-      "destination": "https://sever-facebook-fake.vercel.app",
-      "headers": {
-        "host": "sever-facebook-fake.vercel.app",
-        "origin": "*",
-        "referer": "*"
-      }
+  "build": {
+    "env": {
+      "SOCKET_IO_ROUTE": "/socket.io"
     }
-  ]
+  }
 }

@@ -14,16 +14,14 @@ const server = http.createServer(app);
 
 const io = require('socket.io')(server, {
       cors: {
-        origin: '*',
-        methods: ['GET', 'POST'],
-        allowedHeaders: ['Content-Type'],
+            origin: "*",
+            method: ["GET","POST"]
       }
-    });
-
+});
 
 mongoose.set('strictQuery', true);
 
-app.use(cors());
+
 app.use(function (req, res, next) {
 
       res.setHeader('Access-Control-Allow-Origin', '*');
@@ -33,8 +31,6 @@ app.use(function (req, res, next) {
       next();
 
 });
-
-
 
 io.on('connection', (socket) => {
 

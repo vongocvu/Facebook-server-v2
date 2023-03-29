@@ -28,6 +28,7 @@ const postController = {
           { status_share: 1 },
         ],
       }).sort({createdAt: -1})
+      .limit(req.params.limit)
       .populate('author')
 
       res.status(200).json(Posts);

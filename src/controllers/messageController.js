@@ -3,7 +3,7 @@ const Message = require('../models/Message')
 const messageController = {
    getMessageByGroup: async (req, res) => {
       try {
-          const messages = await Message.find({group: req.params.group})
+          const messages = await Message.find({group: req.params.group}).sort({ createdAt: -1}).limit(req.params.limit)
           .populate('sender')
           res.status(200).json({messages})
       } catch (err) {
