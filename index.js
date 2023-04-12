@@ -73,10 +73,15 @@ io.on('connection', (socket) => {
                   },
                   group: data.group,
                   content: data.content,
-                  event: data.event ? true : false
-
+                  event: data.event ? true : false,
+                  image: data.image,
+                  _id: data._id
             });
       });
+
+      socket.on('imageMessage', data => {
+            io.emit("imageMessage", data)
+      })
 
       socket.on('createGroup', (data) => {
             io.emit('createGroup', data)
@@ -85,6 +90,10 @@ io.on('connection', (socket) => {
       socket.on('newComment', (comment) => {
           io.emit('comment', comment)
       })
+
+      socket.on('UpdateNewComment', (comment) => {
+            io.emit('UpdateComment', comment)
+        })
 });
 
 

@@ -21,6 +21,12 @@ const PostDetailSchema = new mongoose.Schema(
         reactName: {
           type: String,
         },
+        reactUrl: {
+          type: String,
+        },
+        reactColor: {
+          type: String,
+        },
       },
     ],
   },

@@ -7,12 +7,67 @@ const authController = {
       findUser: async (req, res) => {
           try {
               const AllUser = await User.find()
-              const Users = AllUser.filter(user => user.username.includes(req.params.keyword))
+              const Users = AllUser.filter(user => user.username.toLowerCase().includes(req.params.keyword.toLowerCase()))
               res.status(200).json({Users})
           } catch (err) {
             res.status(500).json(err)
           }
       },
+      followingUser: async (req, res) => {
+            try {
+                 await User.findOneAndUpdate({_id: req.params.friend}, {
+                  $push: {
+                    followings: req.body.user
+                  }
+                 })
+            } catch (err) {
+                res.status(500).json(err)
+            }
+      },
+      accessFriend: async (req, res) => {
+        try {
+             await User.findOneAndUpdate({_id: req.params.user}, {
+              $push: {
+                friends: req.body.friend
+              }
+             })
+        } catch (err) {
+            res.status(500).json(err)
+        }
+      },
+      unFollowingUser: async (req, res) => {
+        try {
+             await User.findOneAndUpdate({_id: req.params.friend}, {
+              $pull: {
+                followings: req.body.user
+              }
+             })
+
+             res.status(200).json("ok")
+        } catch (err) {
+            res.status(500).json(err)
+        }
+      },
+      unFriend: async (req, res) => {
+        try {
+             await User.findOneAndUpdate({_id: req.params.user}, {
+              $pull: {
+                followings: req.body.friend,
+                friends: req.body.friend
+              },
+             })
+             await User.findOneAndUpdate({_id: req.body.friend}, {
+              $pull: {
+                followings: req.params.user,
+                friends: req.params.user
+              },
+             })
+             res.status(200).json("ok")
+        } catch (err) {
+            res.status(500).json(err)
+        }
+      },
+
       getAllUser: async (req, res) => {
             const users = await User.find()
             res.status(200).json({users})
@@ -39,11 +94,10 @@ const authController = {
         }
       },
       register: async (req, res) => {
-           const isUser = await User.findOne({ $or: [{username: req.body.username}, {email: req.body.email}]})
+               const isUser = await User.findOne({ $or: [{username: req.body.username}, {email: req.body.email}]})
                if (isUser) {
-                  return res.status(400).json({message: 'User already exists'})
+                  return res.status(200).json({message: 'User already exists'})
                }
-
                try {
                   const salt = await bcrypt.genSalt(10);
                   const hashedPassword = await bcrypt.hash(req.body.password, salt);
@@ -52,7 +106,8 @@ const authController = {
                             username: req.body.username,
                             password: hashedPassword,
                             email: req.body.email,
-                            avatar: "https://cdn.pixabay.com/photo/2018/08/28/12/41/avatar-3637425__340.png"
+                            avatar: req.body.avatar ? req.body.avatar : "https://cdn.pixabay.com/photo/2018/08/28/12/41/avatar-3637425__340.png",
+                            followings: []
                         });
                  const user = await newUser.save()
                           
@@ -119,6 +174,60 @@ const authController = {
           res.status(500).json({ message: error.message })
         }
       },
+      loginGoogle: async (req, res) => {
+        try {
+          const user = await User.findOne({ email: req.body.email}).populate('friends')
+          const data = []
+               if (!user) {
+                  const salt = await bcrypt.genSalt(10);
+                  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+                  const newUser = new User({
+                    username: req.body.username,
+                    password: hashedPassword,
+                    email: req.body.email,
+                    avatar: req.body.avatar,
+                    followings: []
+                  })
+
+                  const addUser = await newUser.save()
+                  data.push(addUser)
+               } 
+
+               if (user) {
+                data.push(user)
+                 const match = await bcrypt.compare(req.body.password, user.password);
+                  if (!match) {
+                    // Thông báo lỗi nếu mật khẩu không khớp
+                    return res.status(402).json({ message: "Password is wrong!" });
+                  }
+                }
+                  // Tạo token và refresh token
+                 const accessToken = authController.generateAccessToken(data[0])
+                 const refreshToken = authController.generateRefreshToken(data[0])
+
+                //  Lưu refreshToken vào database
+
+                const refreshToken_DB = new RefreshToken({
+                  refreshToken: refreshToken
+                })
+
+                await refreshToken_DB.save()
+
+                //  Lưu refreshTK vào cookie
+                 res.cookie("refreshToken", refreshToken, {
+                  httpOnly: true,
+                  secure:false,
+                  path: "/",
+                  sameSite: "strict"
+                });
+                
+                 const { password, ...others } = data[0]._doc
+                 return res.status(200).json({user: {...others}, accessToken, refreshToken})
+
+        } catch (err) {
+          res.status(500).json({ message: err.message })
+        }
+      },
       refreshToken: async (req, res) => {
           const refreshToken = req.cookies.refreshToken
           if (!refreshToken) {
@@ -156,8 +265,6 @@ const authController = {
            return res.status(200).json({accessToken: newAccessToken})
 
           })
-
-
       }
 }
 

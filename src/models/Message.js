@@ -7,7 +7,9 @@ const MessageSchema = new mongoose.Schema({
       },
       content: {
              type: String,
-             required: true
+      },
+      image: {
+             type: String
       },
       group: {
              type: mongoose.Schema.Types.ObjectId,
@@ -17,8 +19,25 @@ const MessageSchema = new mongoose.Schema({
       },
       sended: [{
              type: mongoose.Schema.Types.ObjectId,
-      }]
+      }],
+      reacts: [
+       {
+         user: {
+           type: mongoose.Schema.Types.ObjectId,
+           ref: "User",
+         },
+         reactName: {
+           type: String,
+         },
+         reactUrl: {
+           type: String,
+         },
+         reactColor: {
+           type: String,
+         },
+       },
+     ],
       
-    } , {timestamps:true});
+    }, {timestamps:true});
 
 module.exports = mongoose.model('Message', MessageSchema)

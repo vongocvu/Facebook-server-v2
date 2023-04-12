@@ -17,18 +17,29 @@ const CommentSchema = new mongoose.Schema({
               type: mongoose.Schema.Types.ObjectId,
               ref: 'Comment'
       },
-      level: {
+      level: {  
               type: Number 
       },
-      react:[{
-           author: {
-              type: mongoose.Schema.Types.ObjectId,
-              ref: "User"
-           },
-           react: {
+      image: {
               type: String
-           }
-      }]
+      },
+      react: [
+        {
+          user: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+          },
+          reactName: {
+            type: String,
+          },
+          reactUrl: {
+            type: String,
+          },
+          reactColor: {
+            type: String,
+          },
+        },
+      ],
     }, {timestamps:true});
 
 module.exports = mongoose.model('Comment', CommentSchema);

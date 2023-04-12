@@ -21,6 +21,10 @@ const UserSchema = new mongoose.Schema({
              type: mongoose.Schema.Types.ObjectId,
              ref: 'User' 
       }],
+      followings:[{
+             type: mongoose.Schema.Types.ObjectId,
+             ref: "User"
+      }],
       online: {
              type: Boolean
       },
