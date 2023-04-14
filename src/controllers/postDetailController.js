@@ -41,7 +41,6 @@ const postController = {
         })
       .populate('reacts.user')
 
-
       const Data = []
       const countComments = await Comment.count({ post: post._id });
       Data.push({...post._doc, countComments})

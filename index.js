@@ -127,6 +127,7 @@ const postRoute = require("./src/routers/post")
 const postDetailRoute = require("./src/routers/postDetail")
 const commentRoute = require("./src/routers/comment")
 const groupRoute = require("./src/routers/group")
+const storieRoute = require("./src/routers/storie")
 
 
 app.use("/v1/auth", authRoute)
@@ -137,6 +138,7 @@ app.use("/v1/post", postRoute)
 app.use("/v1/postDetail", postDetailRoute)
 app.use("/v1/comment", commentRoute)
 app.use("/v1/group", groupRoute)
+app.use("/v1/storie", storieRoute)
 
 const port = process.env.PORT || 3000;
 
