@@ -42,6 +42,7 @@ const StorieController = {
               { author: { $in: user.friends } },
             ],
           }).populate('author')
+          .sort({ createdAt: - 1})
 
           res.status(200).json(getStorie)
 
